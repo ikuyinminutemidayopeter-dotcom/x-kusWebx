@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>x-kusWeb3 | Crypto Opportunities</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #0066ff;
+    --blue-bright: #00aaff;
+    --blue-dark: #003399;
+    --black: #000000;
+    --dark: #050a14;
+    --dark2: #0a1220;
+    --white: #e8f0ff;
+    --glow: 0 0 20px rgba(0,170,255,0.5);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--dark);
+    color: var(--white);
+    font-family: 'Rajdhani', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,102,255,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,102,255,0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 60px;
+    background: rgba(5,10,20,0.9);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0,102,255,0.2);
+  }
+
+  .logo {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.4rem;
+    font-weight: 900;
+    background: linear-gradient(90deg, var(--blue-bright), #fff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 2px;
+  }
+
+  .logo span { color: var(--blue); -webkit-text-fill-color: var(--blue-bright); }
+
+  nav ul { list-style: none; display: flex; gap: 40px; }
+  nav ul a {
+    color: rgba(232,240,255,0.7);
+    text-decoration: none;
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  nav ul a:hover { color: var(--blue-bright); }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 120px 20px 60px;
+    z-index: 1;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    border: 1px solid var(--blue);
+    color: var(--blue-bright);
+    font-size: 0.75rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    padding: 8px 20px;
+    border-radius: 2px;
+    margin-bottom: 30px;
+    animation: pulse-border 2s infinite;
+  }
+
+  @keyframes pulse-border {
+    0%, 100% { border-color: var(--blue); box-shadow: none; }
+    50% { border-color: var(--blue-bright); box-shadow: 0 0 12px rgba(0,170,255,0.4); }
+  }
+
+  .hero h1 {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(2.5rem, 7vw, 5.5rem);
+    font-weight: 900;
+    line-height: 1.05;
+    margin-bottom: 24px;
+    letter-spacing: -1px;
+  }
+
+  .hero h1 .blue { color: var(--blue-bright); }
+
+  .hero p {
+    font-size: 1.2rem;
+    color: rgba(232,240,255,0.65);
+    max-width: 580px;
+    line-height: 1.7;
+    margin-bottom: 50px;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+  }
+
+  .btn-start {
+    display: inline-block;
+    background: var(--blue);
+    color: #fff;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 18px 50px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+    clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+  }
+
+  .btn-start::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.5s;
+  }
+
+  .btn-start:hover {
+    background: var(--blue-bright);
+    box-shadow: var(--glow);
+    transform: translateY(-2px);
+  }
+  .btn-start:hover::before { transform: translateX(100%); }
+
+  /* Floating orbs */
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.15;
+    animation: float 8s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .orb1 { width: 400px; height: 400px; background: var(--blue); top: 10%; left: -10%; animation-delay: 0s; }
+  .orb2 { width: 300px; height: 300px; background: var(--blue-bright); bottom: 10%; right: -5%; animation-delay: 3s; }
+  .orb3 { width: 200px; height: 200px; background: #0044cc; top: 50%; left: 60%; animation-delay: 1.5s; }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-30px); }
+  }
+
+  /* SCROLL SECTION */
+  .section {
+    position: relative;
+    z-index: 1;
+    padding: 100px 60px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 0.7rem;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--blue-bright);
+    margin-bottom: 16px;
+  }
+
+  .section h2 {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 700;
+    margin-bottom: 20px;
+    line-height: 1.2;
+  }
+
+  .section > p {
+    color: rgba(232,240,255,0.6);
+    font-size: 1.1rem;
+    max-width: 600px;
+    line-height: 1.8;
+    margin-bottom: 60px;
+  }
+
+  /* CARDS */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+  }
+
+  .card {
+    background: rgba(10,18,32,0.8);
+    border: 1px solid rgba(0,102,255,0.2);
+    padding: 36px 30px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+    cursor: default;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--blue-bright), transparent);
+    transform: scaleX(0);
+    transition: transform 0.4s;
+  }
+
+  .card:hover {
+    border-color: rgba(0,170,255,0.4);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0,102,255,0.15);
+  }
+  .card:hover::before { transform: scaleX(1); }
+
+  .card-icon {
+    font-size: 2.2rem;
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .card h3 {
+    font-family: 'Orbitron', monospace;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+    color: var(--blue-bright);
+  }
+
+  .card p {
+    font-size: 0.95rem;
+    color: rgba(232,240,255,0.6);
+    line-height: 1.7;
+  }
+
+  /* DISCLAIMER */
+  .disclaimer {
+    background: rgba(0,102,255,0.05);
+    border: 1px solid rgba(0,102,255,0.2);
+    border-left: 3px solid var(--blue);
+    padding: 24px 30px;
+    margin: 0 60px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .disclaimer p {
+    font-size: 0.85rem;
+    color: rgba(232,240,255,0.5);
+    line-height: 1.7;
+  }
+
+  .disclaimer strong { color: var(--blue-bright); }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.active { display: flex; }
+
+  .modal {
+    background: var(--dark2);
+    border: 1px solid rgba(0,102,255,0.3);
+    max-width: 520px;
+    width: 90%;
+    padding: 50px 40px;
+    position: relative;
+    animation: modal-in 0.3s ease;
+  }
+
+  @keyframes modal-in {
+    from { opacity: 0; transform: scale(0.9) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .modal::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--blue-dark), var(--blue-bright), var(--blue-dark));
+  }
+
+  .modal h2 {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.4rem;
+    margin-bottom: 16px;
+    color: var(--blue-bright);
+  }
+
+  .modal p {
+    color: rgba(232,240,255,0.65);
+    font-size: 0.95rem;
+    line-height: 1.8;
+    margin-bottom: 20px;
+  }
+
+  .modal ul {
+    list-style: none;
+    margin-bottom: 30px;
+  }
+
+  .modal ul li {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(0,102,255,0.1);
+    font-size: 0.95rem;
+    color: rgba(232,240,255,0.7);
+    display: flex;
+    gap: 12px;
+  }
+  .modal ul li::before { content: '→'; color: var(--blue-bright); flex-shrink: 0; }
+
+  .modal-close {
+    position: absolute;
+    top: 16px; right: 20px;
+    background: none;
+    border: none;
+    color: rgba(232,240,255,0.4);
+    font-size: 1.4rem;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .modal-close:hover { color: var(--white); }
+
+  /* FOOTER */
+  footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 40px 20px;
+    border-top: 1px solid rgba(0,102,255,0.1);
+    color: rgba(232,240,255,0.3);
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+  }
+
+  footer span { color: var(--blue-bright); }
+
+  /* Divider */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0,102,255,0.3), transparent);
+    margin: 0 60px;
+    position: relative;
+    z-index: 1;
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    nav ul { display: none; }
+    .section { padding: 70px 24px; }
+    .disclaimer { margin: 0 24px; }
+    .divider { margin: 0 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 60" width="180" height="60">
+      <defs>
+        <linearGradient id="hexGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#0066ff;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#00aaff;stop-opacity:1" />
+        </linearGradient>
+        <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" style="stop-color:#00aaff;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#ffffff;stop-opacity:1" />
+        </linearGradient>
+        <filter id="glow2">
+          <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+          <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <!-- Hexagon -->
+      <polygon points="28,5 46,5 55,30 46,55 28,55 19,30" fill="url(#hexGrad)" filter="url(#glow2)"/>
+      <polygon points="28,5 46,5 55,30 46,55 28,55 19,30" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.4"/>
+      <!-- X -->
+      <line x1="26" y1="14" x2="48" y2="46" stroke="white" stroke-width="5" stroke-linecap="round"/>
+      <line x1="48" y1="14" x2="26" y2="46" stroke="white" stroke-width="5" stroke-linecap="round"/>
+      <!-- Text -->
+      <text x="64" y="28" font-family="'Courier New', monospace" font-size="18" font-weight="900" fill="url(#textGrad)" letter-spacing="1">x-kus</text>
+      <text x="64" y="48" font-family="'Courier New', monospace" font-size="16" font-weight="700" fill="#ffffff" letter-spacing="2">Web3</text>
+      <line x1="64" y1="33" x2="210" y2="33" stroke="#0066ff" stroke-width="0.6" opacity="0.5"/>
+    </svg>
+  </div>
+  <ul>
+    <li><a href="#opportunities">Opportunities</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#disclaimer">Risk Info</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+
+  <div class="hero-badge">Web3 Crypto Education Platform</div>
+
+  <h1>
+    Discover <span class="blue">Real</span> Crypto<br>Earning Opportunities
+  </h1>
+
+  <p>
+    Learn how to navigate the world of Web3 and cryptocurrency — from airdrops and staking to trading — without putting your savings at risk.
+  </p>
+
+  <button class="btn-start" onclick="document.getElementById('modal').classList.add('active')">
+    Start Now
+  </button>
+</section>
+
+<div class="divider"></div>
+
+<!-- OPPORTUNITIES -->
+<section class="section" id="opportunities">
+  <div class="section-label">What We Cover</div>
+  <h2>Ways to Earn in Crypto</h2>
+  <p>Explore legitimate, low-to-no-cost methods used by crypto participants around the world. Always research before committing funds.</p>
+
+  <div class="cards">
+    <div class="card">
+      <span class="card-icon">🪂</span>
+      <h3>Airdrops</h3>
+      <p>Projects distribute free tokens to early users and community members. Learn how to find and qualify for legitimate airdrops without spending money.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🔒</span>
+      <h3>Staking</h3>
+      <p>Earn passive rewards by locking up crypto assets to help secure a blockchain network. Understand proof-of-stake and how to evaluate staking yields.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🎮</span>
+      <h3>Play-to-Earn</h3>
+      <p>Blockchain games allow players to earn tokens and NFTs through gameplay. Explore the P2E space and how to evaluate game economies.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">📊</span>
+      <h3>DeFi Yield</h3>
+      <p>Decentralized finance protocols offer ways to earn on your holdings through liquidity provision and lending. Learn the risks and rewards.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🛠️</span>
+      <h3>Bounties & Tasks</h3>
+      <p>Crypto projects pay contributors for bug reports, translations, content creation, and community building. Great for beginners.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">📚</span>
+      <h3>Learn-to-Earn</h3>
+      <p>Platforms like Coinbase Earn reward you with small amounts of crypto for completing educational modules about new projects.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- HOW IT WORKS -->
+<section class="section" id="how">
+  <div class="section-label">Getting Started</div>
+  <h2>How to Begin Your Web3 Journey</h2>
+  <p>No experience needed. Follow these foundational steps to safely enter the crypto space.</p>
+
+  <div class="cards">
+    <div class="card">
+      <span class="card-icon">1️⃣</span>
+      <h3>Educate Yourself</h3>
+      <p>Understand what blockchain, wallets, and tokens are before putting any money in. Knowledge is your most valuable asset in crypto.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">2️⃣</span>
+      <h3>Set Up a Wallet</h3>
+      <p>Create a non-custodial wallet (like MetaMask or Trust Wallet) to interact with Web3 apps. Never share your seed phrase with anyone.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">3️⃣</span>
+      <h3>Start Small & Free</h3>
+      <p>Begin with airdrops, learn-to-earn, and bounties — opportunities that don't require upfront capital while you build experience.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">4️⃣</span>
+      <h3>Stay Safe</h3>
+      <p>Avoid promises of guaranteed returns. Research every project. If it sounds too good to be true in crypto, it usually is.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- BITTOKEN SECTION -->
+<section class="section" id="bittoken">
+  <div class="section-label">Featured Opportunity</div>
+  <h2>Discover <span style="color:var(--blue-bright)">Bittoken</span></h2>
+  <p>Bittoken is a real Web3 project that is completely free to join. Earn rewards early before the official listing and be part of a growing crypto community.</p>
+
+  <div class="cards">
+    <div class="card">
+      <span class="card-icon">🪙</span>
+      <h3>What is Bittoken?</h3>
+      <p>Bittoken is a legitimate Web3 project rewarding early adopters. Join for free and start earning before the official token listing goes live.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">💸</span>
+      <h3>Totally Free to Join</h3>
+      <p>No investment required. Sign up, complete simple tasks and earn Bittoken rewards. The earlier you join the more you can accumulate before listing.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🚀</span>
+      <h3>Early Adopter Advantage</h3>
+      <p>Getting in early on Web3 projects before listing is one of the best zero-cost crypto strategies. Don't miss this window of opportunity.</p>
+    </div>
+  </div>
+
+  <div style="text-align:center; margin-top: 50px;">
+    <a href="https://bittokenapp.com/register?ref=8661213867" target="_blank" class="btn-start">
+      Join Project
+    </a>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- COMMUNITY SECTION -->
+<section class="section" id="community">
+  <div class="section-label">Join Us</div>
+  <h2>Join Our Community</h2>
+  <p>Connect with us on social media for the latest crypto opportunities, tips, and updates.</p>
+
+  <div class="cards">
+    <div class="card" onclick="window.open('https://twitter.com/ikuyinminu32643','_blank')" style="cursor:pointer;">
+      <span class="card-icon">🐦</span>
+      <h3>Twitter / X</h3>
+      <p>Follow us on X for daily crypto updates, news and opportunities.<br><br><strong style="color:var(--blue-bright)">@ikuyinminu32643</strong></p>
+    </div>
+    <div class="card" onclick="window.open('https://discord.com/users/ikuyinminu','_blank')" style="cursor:pointer;">
+      <span class="card-icon">💬</span>
+      <h3>Discord</h3>
+      <p>Join our Discord community to chat, ask questions and learn together.<br><br><strong style="color:var(--blue-bright)">ikuyinminu</strong></p>
+    </div>
+    <div class="card" onclick="window.open('https://t.me/Kusweb3','_blank')" style="cursor:pointer;">
+      <span class="card-icon">✈️</span>
+      <h3>Telegram</h3>
+      <p>Join our Telegram channel for instant updates and crypto alerts.<br><br><strong style="color:var(--blue-bright)">@Kusweb3</strong></p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<div class="disclaimer" id="disclaimer">
+  <p>
+    <strong>⚠️ Risk Disclosure:</strong> Cryptocurrency investments carry significant risk. Past performance is not indicative of future results. Earnings are never guaranteed, and you may lose money. x-kusWeb3 is an educational platform — we do not provide financial advice. Always do your own research (DYOR) and consult a qualified financial advisor before investing. Only invest what you can afford to lose.
+  </p>
+</div>
+
+<br><br>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2025 <span>x-kusWeb3</span> · Educational Crypto Platform · Not Financial Advice</p>
+  <br>
+  <p>
+    <a href="https://twitter.com/ikuyinminu32643" target="_blank" style="color:var(--blue-bright); text-decoration:none; margin: 0 12px;">𝕏 @ikuyinminu32643</a>
+    <a href="https://discord.com/users/ikuyinminu" target="_blank" style="color:var(--blue-bright); text-decoration:none; margin: 0 12px;">💬 ikuyinminu</a>
+    <a href="https://t.me/Kusweb3" target="_blank" style="color:var(--blue-bright); text-decoration:none; margin: 0 12px;">✈️ @Kusweb3</a>
+  </p>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)this.classList.remove('active')">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('modal').classList.remove('active')">✕</button>
+    <h2>Start Your Journey</h2>
+    <p>You're about to explore the world of Web3 earning opportunities. Here's what you'll learn:</p>
+    <ul>
+      <li>How to earn crypto through airdrops with zero upfront cost</li>
+      <li>Staking basics and how to evaluate yields safely</li>
+      <li>How to find legitimate bounty programs and tasks</li>
+      <li>Red flags to avoid scams and rug pulls</li>
+      <li>Setting up your first Web3 wallet securely</li>
+    </ul>
+    <p style="font-size:0.8rem; color:rgba(232,240,255,0.4);">Remember: Crypto markets are volatile. Income is never guaranteed. Learn first, invest wisely.</p>
+    <button class="btn-start" style="width:100%; text-align:center;" onclick="document.getElementById('opportunities').scrollIntoView({behavior:'smooth'}); document.getElementById('modal').classList.remove('active')">
+      Explore Opportunities
+    </button>
+  </div>
+</div>
+
+</body>
+</html>
